@@ -180,6 +180,53 @@
       text-align: center;
     }
 
+    /* Controles del juego manual */
+    #controles-juego {
+      margin: 20px 0; 
+      padding: 15px; 
+      border: 1px solid #444;
+      border-radius: 5px;
+      background: #111;
+      max-width: 600px;
+      text-align: center;
+    }
+
+    #controles-juego h3 {
+      color: #ffeb3b;
+      margin-top: 0;
+    }
+
+    #controles-juego button {
+      background: #00cc00;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      margin: 0 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    #controles-juego button:hover {
+      background: #00aa00;
+    }
+
+    #controles-juego button#btnPausar {
+      background: #ff9900;
+    }
+
+    #controles-juego button#btnPausar:hover {
+      background: #cc7700;
+    }
+
+    #controles-juego button#btnReiniciar {
+      background: #ff3333;
+    }
+
+    #controles-juego button#btnReiniciar:hover {
+      background: #cc0000;
+    }
+
     @keyframes parpadeo {
       0%, 100% { opacity: 1; }
       50% { opacity: 0.5; }
@@ -190,27 +237,81 @@
 <body>
   <h1>Pacman - Algoritmo Genético</h1>
   
-  <div id="controles-ag">
+  <!-- Agregar esto en la sección de controles del AG -->
+<!-- Agregar esto en la sección de controles del AG -->
+<div id="controles-ag">
     <h3>Algoritmo Genético</h3>
+    
+    <!-- Parámetros configurables -->
+    <div style="margin: 15px 0; padding: 10px; background: #222; border-radius: 5px;">
+        <h4 style="margin-top: 0; color: #ffeb3b;">Parámetros</h4>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+            <div>
+                <label>Población (N):</label>
+                <input type="number" id="inputPoblacion" value="20" min="10" max="100">
+            </div>
+            <div>
+                <label>Generaciones (G):</label>
+                <input type="number" id="inputGeneraciones" value="50" min="10" max="200">
+            </div>
+            <div>
+                <label>Tasa Mutación:</label>
+                <input type="number" id="inputMutacion" value="0.1" min="0" max="1" step="0.05">
+            </div>
+            <div>
+                <label>Semilla:</label>
+                <input type="number" id="inputSemilla" value="12345">
+            </div>
+        </div>
+    </div>
+    
     <div>
-      <button id="btnIniciarAG">Iniciar Evolución</button>
-      <button id="btnDemoMejor" disabled>Ver Mejor Individuo</button>
+        <button id="btnIniciarAG">Iniciar Evolución</button>
+        <button id="btnPausarAG" disabled>Pausar</button>
+        <button id="btnReiniciarAG">Reiniciar</button>
+        <button id="btnExportarMejor" disabled>Exportar Mejor</button>
+        <button id="btnDemoMejor" disabled>Ver Mejor Individuo</button>
     </div>
     
     <div id="info-ag">
-      <div>Estado: <span id="estado-ag">Listo para iniciar</span></div>
-      <div id="progreso-ag"></div>
-      <div class="metricas">
-        <div class="metrica">Generación: <span id="generacionActual">0</span>/<span id="totalGeneraciones">50</span></div>
-        <div class="metrica">Mejor Fitness: <span id="mejorFitness">-</span></div>
-        <div class="metrica">Promedio Fitness: <span id="promedioFitness">-</span></div>
-      </div>
+        <div>Estado: <span id="estado-ag">Listo para iniciar</span></div>
+        <div id="progreso-ag"></div>
+        
+        <!-- Gráfico de fitness -->
+        <div style="margin: 15px 0;">
+            <canvas id="graficoFitness" width="400" height="200" style="border: 1px solid #444; background: #000;"></canvas>
+        </div>
+        
+        <div class="metricas">
+            <div class="metrica">Generación: <span id="generacionActual">0</span>/<span id="totalGeneraciones">50</span></div>
+            <div class="metrica">Mejor Fitness: <span id="mejorFitness">-</span></div>
+            <div class="metrica">Promedio Fitness: <span id="promedioFitness">-</span></div>
+        </div>
+        
+        <div class="metricas">
+            <div class="metrica">Tiempo Total: <span id="tiempoTotal">0</span>s</div>
+            <div class="metrica">Tiempo/Gen: <span id="tiempoGeneracion">-</span>ms</div>
+            <div class="metrica">Mejor Puntuación: <span id="mejorPuntuacion">-</span></div>
+        </div>
+    </div>
+</div>
+
+  <!-- NUEVO: Controles del juego manual -->
+  <div id="controles-juego">
+    <h3>Controles del Juego</h3>
+    <div>
+      <button id="btnJugarManual">Jugar Manualmente</button>
+      <button id="btnPausar" disabled>Pausar</button>
+      <button id="btnReiniciar">Reiniciar Juego</button>
+    </div>
+    <div style="margin-top: 10px; color: #ccc; font-size: 0.9rem;">
+      Usa las flechas del teclado para mover a Pacman
     </div>
   </div>
 
   <div id="ui">
     <span id="puntuacion">Puntuación: 0</span>
-    <span id="estado">Demo del Mejor Individuo</span>
+    <span id="estado">Presiona "Jugar Manualmente" para empezar</span>
   </div>
   <div id="game" class="game"></div>
   
