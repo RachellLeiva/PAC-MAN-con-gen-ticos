@@ -1,321 +1,365 @@
+<!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <title>Pacman - Algoritmo Genético</title>
-  <style>
-    body {
-      margin: 0;
-      min-height: 100vh;
-      background: #000;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      color: #fff;
-      font-family: system-ui, sans-serif;
-    }
+    <meta charset="UTF-8" />
+    <title>Pacman - Algoritmo Genético</title>
+    <style>
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: #000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-family: system-ui, sans-serif;
+        }
 
-    h1 {
-      margin-bottom: 20px;
-      font-size: 2.5rem;
-      color: #ffeb3b;
-      text-shadow: 0 0 10px #ffeb3b;
-    }
+        h1 {
+            margin-bottom: 20px;
+            font-size: 2.5rem;
+            color: #ffeb3b;
+            text-shadow: 0 0 10px #ffeb3b;
+        }
 
-    #ui {
-      margin-bottom: 20px;
-      text-align: center;
-      font-size: 1.2rem;
-    }
+        #ui {
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 1.2rem;
+        }
 
-    #puntuacion {
-      color: #ffeb3b;
-      margin-right: 20px;
-    }
+        #puntuacion {
+            color: #ffeb3b;
+            margin-right: 20px;
+        }
 
-    #estado {
-      color: #00ff00;
-    }
+        #estado {
+            color: #00ff00;
+        }
 
-    .game {
-      display: grid;
-      background: #000;
-      padding: 10px;
-      border-radius: 20px;
-      border: 4px solid #004bff;
-      box-shadow: 0 0 25px #004bff;
-    }
+        .game {
+            display: grid;
+            background: #000;
+            padding: 10px;
+            border-radius: 20px;
+            border: 4px solid #004bff;
+            box-shadow: 0 0 25px #004bff;
+        }
 
-    .tile { width: 20px; height: 20px; position: relative; }
-    .wall { background: #001b99; border-radius: 6px; box-shadow: 0 0 6px #004bff inset; }
-    .path { background: #000; }
-    .path .dot {
-      position: absolute; width: 4px; height: 4px; border-radius: 50%;
-      background: #fff; top: 50%; left: 50%; transform: translate(-50%, -50%);
-    }
-    .pellet-especial {
-      position: absolute; 
-      width: 10px; 
-      height: 10px; 
-      border-radius: 50%;
-      background: #fff; 
-      top: 50%; 
-      left: 50%; 
-      transform: translate(-50%, -50%);
-      box-shadow: 0 0 8px #fff;
-    }
-    .empty { background: #000; }
-    .pacman {
-      width: 20px; height: 20px; background: #ffeb3b; border-radius: 50%;
-    }
-    
-    .ghost {
-      position: relative; border-radius: 50% 50% 10% 10%;
-      width: 100%; height: 100%; overflow: hidden;
-    }
-    .ghost::before {
-      content: ''; position: absolute; width: 100%; height: 50%;
-      background: inherit; bottom: 0;
-      clip-path: polygon(0 60%, 12% 100%, 25% 60%, 37% 100%, 50% 60%, 62% 100%, 75% 60%, 87% 100%, 100% 60%);
-    }
-    .ghost.vulnerable {
-      background: #0000ff !important;
-      animation: parpadeo 0.5s infinite;
-    }
-    .ghost-eye {
-      position: absolute; top: 4px; width: 6px; height: 6px;
-      background: #fff; border-radius: 50%;
-    }
-    .ghost-eye::after {
-      content: ''; position: absolute; width: 3px; height: 3px;
-      background: #00f; border-radius: 50%; top: 1px; left: 1px;
-    }
-    .ghost.ojos {
-      background: transparent !important;
-      border: 2px solid white;
-    }
+        .tile { width: 20px; height: 20px; position: relative; }
+        .wall { background: #001b99; border-radius: 6px; box-shadow: 0 0 6px #004bff inset; }
+        .path { background: #000; }
+        .path .dot {
+            position: absolute; width: 4px; height: 4px; border-radius: 50%;
+            background: #fff; top: 50%; left: 50%; transform: translate(-50%, -50%);
+        }
+        .pellet-especial {
+            position: absolute; 
+            width: 10px; 
+            height: 10px; 
+            border-radius: 50%;
+            background: #fff; 
+            top: 50%; 
+            left: 50%; 
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 8px #fff;
+        }
+        .empty { background: #000; }
+        .pacman {
+            width: 20px; height: 20px; background: #ffeb3b; border-radius: 50%;
+        }
+        
+        .ghost {
+            position: relative; border-radius: 50% 50% 10% 10%;
+            width: 100%; height: 100%; overflow: hidden;
+        }
+        .ghost::before {
+            content: ''; position: absolute; width: 100%; height: 50%;
+            background: inherit; bottom: 0;
+            clip-path: polygon(0 60%, 12% 100%, 25% 60%, 37% 100%, 50% 60%, 62% 100%, 75% 60%, 87% 100%, 100% 60%);
+        }
+        .ghost.vulnerable {
+            background: #0000ff !important;
+            animation: parpadeo 0.5s infinite;
+        }
+        .ghost-eye {
+            position: absolute; top: 4px; width: 6px; height: 6px;
+            background: #fff; border-radius: 50%;
+        }
+        .ghost-eye::after {
+            content: ''; position: absolute; width: 3px; height: 3px;
+            background: #00f; border-radius: 50%; top: 1px; left: 1px;
+        }
+        .ghost.ojos {
+            background: transparent !important;
+            border: 2px solid white;
+        }
 
-    .ghost.ojos::before {
-      display: none;
-    }
+        .ghost.ojos::before {
+            display: none;
+        }
 
-    .ghost.ojos .ghost-eye {
-      background: white;
-      width: 8px;
-      height: 8px;
-    }
+        .ghost.ojos .ghost-eye {
+            background: white;
+            width: 8px;
+            height: 8px;
+        }
 
-    .ghost.ojos .ghost-eye::after {
-      background: black;
-      width: 4px;
-      height: 4px;
-    }
-    
-    .ghost-eye.left { left: 3px; }
-    .ghost-eye.right { right: 3px; }
-    .ghost.A { background: #ff0000; }
-    .ghost.B { background: #ffb8ff; }
-    .ghost.C { background: #00ffff; }
-    .ghost.D { background: #ffb847; }
+        .ghost.ojos .ghost-eye::after {
+            background: black;
+            width: 4px;
+            height: 4px;
+        }
+        
+        .ghost-eye.left { left: 3px; }
+        .ghost-eye.right { right: 3px; }
+        .ghost.A { background: #ff0000; }
+        .ghost.B { background: #ffb8ff; }
+        .ghost.C { background: #00ffff; }
+        .ghost.D { background: #ffb847; }
 
-    /* Controles del AG */
-    #controles-ag {
-      margin: 20px 0; 
-      padding: 15px; 
-      border: 1px solid #444;
-      border-radius: 5px;
-      background: #111;
-      max-width: 600px;
-      text-align: center;
-    }
+        /* Controles del AG */
+        #controles-ag {
+            margin: 20px 0; 
+            padding: 15px; 
+            border: 1px solid #444;
+            border-radius: 5px;
+            background: #111;
+            max-width: 800px;
+            text-align: center;
+        }
 
-    #controles-ag h3 {
-      color: #ffeb3b;
-      margin-top: 0;
-    }
+        #controles-ag h3 {
+            color: #ffeb3b;
+            margin-top: 0;
+        }
 
-    #controles-ag button {
-      background: #004bff;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      margin: 0 10px;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 1rem;
-    }
+        #controles-ag button {
+            background: #004bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 0 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
 
-    #controles-ag button:hover {
-      background: #0033cc;
-    }
+        #controles-ag button:hover {
+            background: #0033cc;
+        }
 
-    #controles-ag button:disabled {
-      background: #666;
-      cursor: not-allowed;
-    }
+        #controles-ag button:disabled {
+            background: #666;
+            cursor: not-allowed;
+        }
 
-    #info-ag {
-      margin-top: 15px;
-      padding: 10px;
-      background: #222;
-      border-radius: 5px;
-      font-family: monospace;
-    }
+        .parametros-ag {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin: 15px 0;
+            padding: 15px;
+            background: #222;
+            border-radius: 5px;
+        }
 
-    #progreso-ag {
-      margin-top: 10px;
-    }
+        .parametro {
+            text-align: left;
+        }
 
-    .metricas {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 10px;
-      margin-top: 10px;
-    }
+        .parametro label {
+            display: block;
+            margin-bottom: 5px;
+            color: #ffeb3b;
+            font-size: 0.9rem;
+        }
 
-    .metrica {
-      background: #333;
-      padding: 8px;
-      border-radius: 5px;
-      text-align: center;
-    }
+        .parametro input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #444;
+            border-radius: 3px;
+            background: #000;
+            color: white;
+        }
 
-    /* Controles del juego manual */
-    #controles-juego {
-      margin: 20px 0; 
-      padding: 15px; 
-      border: 1px solid #444;
-      border-radius: 5px;
-      background: #111;
-      max-width: 600px;
-      text-align: center;
-    }
+        #info-ag {
+            margin-top: 15px;
+            padding: 10px;
+            background: #222;
+            border-radius: 5px;
+            font-family: monospace;
+        }
 
-    #controles-juego h3 {
-      color: #ffeb3b;
-      margin-top: 0;
-    }
+        #progreso-ag {
+            margin-top: 10px;
+        }
 
-    #controles-juego button {
-      background: #00cc00;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      margin: 0 10px;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 1rem;
-    }
+        .metricas {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            margin-top: 10px;
+        }
 
-    #controles-juego button:hover {
-      background: #00aa00;
-    }
+        .metrica {
+            background: #333;
+            padding: 8px;
+            border-radius: 5px;
+            text-align: center;
+        }
 
-    #controles-juego button#btnPausar {
-      background: #ff9900;
-    }
+        /* Controles del juego manual */
+        #controles-juego {
+            margin: 20px 0; 
+            padding: 15px; 
+            border: 1px solid #444;
+            border-radius: 5px;
+            background: #111;
+            max-width: 600px;
+            text-align: center;
+        }
 
-    #controles-juego button#btnPausar:hover {
-      background: #cc7700;
-    }
+        #controles-juego h3 {
+            color: #ffeb3b;
+            margin-top: 0;
+        }
 
-    #controles-juego button#btnReiniciar {
-      background: #ff3333;
-    }
+        #controles-juego button {
+            background: #00cc00;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 0 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
 
-    #controles-juego button#btnReiniciar:hover {
-      background: #cc0000;
-    }
+        #controles-juego button:hover {
+            background: #00aa00;
+        }
 
-    @keyframes parpadeo {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.5; }
-    }
-  </style>
+        #controles-juego button#btnPausar {
+            background: #ff9900;
+        }
+
+        #controles-juego button#btnPausar:hover {
+            background: #cc7700;
+        }
+
+        #controles-juego button#btnReiniciar {
+            background: #ff3333;
+        }
+
+        #controles-juego button#btnReiniciar:hover {
+            background: #cc0000;
+        }
+
+        @keyframes parpadeo {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .advertencia {
+            color: #ff4444;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+    </style>
 </head>
 
 <body>
-  <h1>Pacman - Algoritmo Genético</h1>
-  
-  <!-- Agregar esto en la sección de controles del AG -->
-<!-- Agregar esto en la sección de controles del AG -->
-<div id="controles-ag">
-    <h3>Algoritmo Genético</h3>
+    <h1>Pacman - Algoritmo Genético</h1>
     
-    <!-- Parámetros configurables -->
-    <div style="margin: 15px 0; padding: 10px; background: #222; border-radius: 5px;">
-        <h4 style="margin-top: 0; color: #ffeb3b;">Parámetros</h4>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-            <div>
+    <!-- Controles del Algoritmo Genético -->
+    <div id="controles-ag">
+        <h3>Algoritmo Genético</h3>
+        
+        <!-- Parámetros configurables -->
+        <div class="parametros-ag">
+            <div class="parametro">
                 <label>Población (N):</label>
-                <input type="number" id="inputPoblacion" value="20" min="10" max="100">
+                <input type="number" id="inputPoblacion" value="20" min="5" max="100">
             </div>
-            <div>
+            <div class="parametro">
                 <label>Generaciones (G):</label>
                 <input type="number" id="inputGeneraciones" value="50" min="10" max="200">
             </div>
-            <div>
-                <label>Tasa Mutación:</label>
-                <input type="number" id="inputMutacion" value="0.1" min="0" max="1" step="0.05">
+            <div class="parametro">
+                <label>Tasa Selección (%):</label>
+                <input type="number" id="inputSeleccion" value="60" min="0" max="100" step="5">
             </div>
-            <div>
+            <div class="parametro">
+                <label>Tasa Cruzamiento (%):</label>
+                <input type="number" id="inputCruzamiento" value="30" min="0" max="100" step="5">
+            </div>
+            <div class="parametro">
+                <label>Tasa Mutación (%):</label>
+                <input type="number" id="inputMutacion" value="10" min="0" max="100" step="5">
+            </div>
+            <div class="parametro">
                 <label>Semilla:</label>
                 <input type="number" id="inputSemilla" value="12345">
             </div>
         </div>
-    </div>
-    
-    <div>
-        <button id="btnIniciarAG">Iniciar Evolución</button>
-        <button id="btnPausarAG" disabled>Pausar</button>
-        <button id="btnReiniciarAG">Reiniciar</button>
-        <button id="btnExportarMejor" disabled>Exportar Mejor</button>
-        <button id="btnDemoMejor" disabled>Ver Mejor Individuo</button>
-    </div>
-    
-    <div id="info-ag">
-        <div>Estado: <span id="estado-ag">Listo para iniciar</span></div>
-        <div id="progreso-ag"></div>
         
-        <!-- Gráfico de fitness -->
-        <div style="margin: 15px 0;">
-            <canvas id="graficoFitness" width="400" height="200" style="border: 1px solid #444; background: #000;"></canvas>
+        <div id="validacion-sumatoria" class="advertencia" style="display: none;">
+            Las tasas deben sumar 100% (Actual: <span id="suma-actual">0</span>%)
         </div>
         
-        <div class="metricas">
-            <div class="metrica">Generación: <span id="generacionActual">0</span>/<span id="totalGeneraciones">50</span></div>
-            <div class="metrica">Mejor Fitness: <span id="mejorFitness">-</span></div>
-            <div class="metrica">Promedio Fitness: <span id="promedioFitness">-</span></div>
+        <div>
+            <button id="btnIniciarAG">Iniciar Evolución</button>
+            <button id="btnPausarAG" disabled>Pausar</button>
+            <button id="btnReiniciarAG">Reiniciar</button>
+            <button id="btnExportarMejor" disabled>Exportar Mejor</button>
+            <button id="btnDemoMejor" disabled>Ver Mejor Individuo</button>
         </div>
         
-        <div class="metricas">
-            <div class="metrica">Tiempo Total: <span id="tiempoTotal">0</span>s</div>
-            <div class="metrica">Tiempo/Gen: <span id="tiempoGeneracion">-</span>ms</div>
-            <div class="metrica">Mejor Puntuación: <span id="mejorPuntuacion">-</span></div>
+        <div id="info-ag">
+            <div>Estado: <span id="estado-ag">Listo para iniciar</span></div>
+            <div id="progreso-ag"></div>
+            
+            <!-- Gráfico de fitness -->
+            <div style="margin: 15px 0;">
+                <canvas id="graficoFitness" width="400" height="200" style="border: 1px solid #444; background: #000;"></canvas>
+            </div>
+            
+            <div class="metricas">
+                <div class="metrica">Generación: <span id="generacionActual">0</span>/<span id="totalGeneraciones">50</span></div>
+                <div class="metrica">Mejor Fitness: <span id="mejorFitness">-</span></div>
+                <div class="metrica">Promedio Fitness: <span id="promedioFitness">-</span></div>
+            </div>
+            
+            <div class="metricas">
+                <div class="metrica">Tiempo Total: <span id="tiempoTotal">0</span>s</div>
+                <div class="metrica">Tiempo/Gen: <span id="tiempoGeneracion">-</span>ms</div>
+                <div class="metrica">Mejor Puntuación: <span id="mejorPuntuacion">-</span></div>
+            </div>
         </div>
     </div>
-</div>
 
-  <!-- NUEVO: Controles del juego manual -->
-  <div id="controles-juego">
-    <h3>Controles del Juego</h3>
-    <div>
-      <button id="btnJugarManual">Jugar Manualmente</button>
-      <button id="btnPausar" disabled>Pausar</button>
-      <button id="btnReiniciar">Reiniciar Juego</button>
+    <!-- Controles del juego manual -->
+    <div id="controles-juego">
+        <h3>Controles del Juego</h3>
+        <div>
+            <button id="btnJugarManual">Jugar Manualmente</button>
+            <button id="btnPausar" disabled>Pausar</button>
+            <button id="btnReiniciar">Reiniciar Juego</button>
+        </div>
+        <div style="margin-top: 10px; color: #ccc; font-size: 0.9rem;">
+            Usa las flechas del teclado para mover a Pacman
+        </div>
     </div>
-    <div style="margin-top: 10px; color: #ccc; font-size: 0.9rem;">
-      Usa las flechas del teclado para mover a Pacman
-    </div>
-  </div>
 
-  <div id="ui">
-    <span id="puntuacion">Puntuación: 0</span>
-    <span id="estado">Presiona "Jugar Manualmente" para empezar</span>
-  </div>
-  <div id="game" class="game"></div>
-  
-  <script src="script.js"></script>
-  <script src="ag.js"></script>
+    <div id="ui">
+        <span id="puntuacion">Puntuación: 0</span>
+        <span id="estado">Presiona "Jugar Manualmente" para empezar</span>
+    </div>
+    <div id="game" class="game"></div>
+    
+    <script src="script.js"></script>
 </body>
 </html>
