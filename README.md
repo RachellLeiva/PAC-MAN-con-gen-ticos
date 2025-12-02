@@ -102,6 +102,38 @@ Presiona live server y se abrirá directamente
 │   └── Control de reproducción
 │
 ├── README.md
+│
+├─ config/
+│  ├─ config-run-seed123.json
+│  ├─ config-run-seed456.json
+│  └─ config-run-seed789.json
+│
+├─ logs/
+│  ├─ corrida-seed123/
+│  │  ├─ log-gen-1.txt
+│  │  ├─ log-gen-2.txt
+│  │  ├─ ...
+│  │  └─ log-gen-50.txt
+│  │
+│  ├─ corrida-seed456/
+│  │  ├─ log-gen-1.txt
+│  │  └─ log-gen-50.txt
+│  │
+│  └─ corrida-seed789/
+│     ├─ log-gen-1.txt
+│     └─ log-gen-50.txt
+│
+├─ replays/
+│  ├─ replay-seed123.json
+│  ├─ replay-seed456.json
+│  └─ replay-seed789.json
+│
+├─ best/
+│  ├─ best-seed123.json
+│  ├─ best-seed456.json
+│  └─ best-seed789.json
+│
+└─ paper.pdf
 ```
 
 ### Componentes Clave
