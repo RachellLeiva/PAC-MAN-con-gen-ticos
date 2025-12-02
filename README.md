@@ -101,7 +101,7 @@ Presiona live server y se abrirá directamente
 │   ├── Exportación/Importación
 │   └── Control de reproducción
 │
-│
+├── README.md
 ```
 
 ### Componentes Clave
