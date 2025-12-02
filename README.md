@@ -128,10 +128,6 @@ Presiona live server y se abrirá directamente
 │  ├─ replay-seed456.json
 │  └─ replay-seed789.json
 │
-├─ best/
-│  ├─ best-seed123.json
-│  ├─ best-seed456.json
-│  └─ best-seed789.json
 │
 └─ paper.pdf
 ```
